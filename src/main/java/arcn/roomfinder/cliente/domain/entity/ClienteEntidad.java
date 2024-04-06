@@ -2,8 +2,10 @@ package arcn.roomfinder.cliente.domain.entity;
 
 import arcn.roomfinder.cliente.domain.model.CuentaBancaria;
 import arcn.roomfinder.cliente.domain.model.TipoDocumento;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.Entity;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 @Table(name = "clientes")
 public class ClienteEntidad {
     private String nombre;
@@ -19,7 +22,7 @@ public class ClienteEntidad {
 
     @Id
     private String correo;
-    private CuentaBancaria cuentaBancaria;
+    private CuentaBancariaEntidad cuentaBancariaEntidad;
     
     
 }

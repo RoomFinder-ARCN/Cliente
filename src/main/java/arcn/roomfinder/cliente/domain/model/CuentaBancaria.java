@@ -4,10 +4,7 @@ import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
-import java.math.BigDecimal;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import arcn.roomfinder.cliente.domain.entity.CuentaBancariaEntidad;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +20,7 @@ public class CuentaBancaria {
     private String numeroCuenta;
 
     @NonNull
+    @Getter
     @JsonProperty("cantidadCredito")
     private BigDecimal cantidadCredito;
 
@@ -33,6 +31,11 @@ public class CuentaBancaria {
     public CuentaBancaria(String numeroCuenta, double cantidadCredito) {
         this.numeroCuenta = numeroCuenta;
         this.cantidadCredito = BigDecimal.valueOf(cantidadCredito);
+    }
+
+    public CuentaBancaria(CuentaBancariaEntidad cuentaBancariaEntidad) {
+        this.numeroCuenta = cuentaBancariaEntidad.getNumeroCuenta();
+        this.cantidadCredito = cuentaBancariaEntidad.getCantidadCredito();
     }
 
     public BigDecimal agregarFondos(BigDecimal cantidad){
