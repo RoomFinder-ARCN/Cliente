@@ -3,7 +3,7 @@ package arcn.roomfinder.cliente.domain.entity;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.Table;
 
 import arcn.roomfinder.cliente.domain.model.CuentaBancaria;
 import jakarta.persistence.Column;
@@ -20,10 +20,10 @@ import lombok.NoArgsConstructor;
 public class CuentaBancariaEntidad {
 
     @Id
-    @Column
+    @Column(name = "numero_cuenta")
     private String numeroCuenta;
 
-    @Column
+    @Column(name = "cantidad_credito")
     private double cantidadCredito;
 
     public CuentaBancariaEntidad(CuentaBancaria cuentaBancaria) {

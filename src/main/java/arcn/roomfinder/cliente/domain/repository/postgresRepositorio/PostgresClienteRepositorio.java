@@ -26,7 +26,7 @@ public class PostgresClienteRepositorio implements ClienteRepositorio {
         ClienteEntidad clienteEntidad = new ClienteEntidad();
         clienteEntidad.setCorreo(cliente.getCorreo());
         clienteEntidad.setNombre(cliente.getNombre());
-        clienteEntidad.setTipoDocumento(cliente.getTipoDocumento().toString());
+        clienteEntidad.setTipoDocumento(cliente.getTipoDocumento());
         clienteEntidad.setNumeroDocumento(cliente.getNumeroDocumento());        
         clienteEntidad.setCuentaBancariaEntidad(new CuentaBancariaEntidad(cliente.getCuentaBancaria()));
 
@@ -35,7 +35,7 @@ public class PostgresClienteRepositorio implements ClienteRepositorio {
         return new Cliente(
             clientResult.getCorreo(), 
             clientResult.getNombre(), 
-            TipoDocumento.valueOf(clientResult.getTipoDocumento()), 
+            clientResult.getTipoDocumento(), 
             clientResult.getNumeroDocumento(),           
             new CuentaBancaria(clientResult.getCuentaBancariaEntidad())
         );

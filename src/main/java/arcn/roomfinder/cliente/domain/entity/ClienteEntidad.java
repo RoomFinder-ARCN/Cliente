@@ -7,9 +7,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -28,14 +29,16 @@ public class ClienteEntidad {
     @Column
     private String nombre;
 
-    @Column
-    private String tipoDocumento;
+    @Column(name = "tipo_documento")
+    @Enumerated(EnumType.STRING)
+    private TipoDocumento tipoDocumento;
 
-    @Column
+    @Column(name = "numero_documento")
     private String numeroDocumento;
 
     
     @OneToOne
+    @JoinColumn(name = "cuenta_bancaria_id", referencedColumnName = "numero_cuenta")
     private CuentaBancariaEntidad cuentaBancariaEntidad;
     
     
