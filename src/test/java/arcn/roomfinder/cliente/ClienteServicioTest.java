@@ -50,10 +50,10 @@ public class ClienteServicioTest {
         cuentaBancariaCorrecta = new CuentaBancaria("123456789", 1000000);
 
         clienteCorrecto = new Cliente(
+            "JuanPuentes@gmail.com",
             "Juan Puentes", 
             TipoDocumento.valueOf("CC"), 
-            "123456789", 
-            "JuanPuentes@gmail.com", 
+            "123456789",             
             cuentaBancariaCorrecta
         );
         

@@ -35,7 +35,7 @@ public class CuentaBancaria {
 
     public CuentaBancaria(CuentaBancariaEntidad cuentaBancariaEntidad) {
         this.numeroCuenta = cuentaBancariaEntidad.getNumeroCuenta();
-        this.cantidadCredito = cuentaBancariaEntidad.getCantidadCredito();
+        this.cantidadCredito = BigDecimal.valueOf(cuentaBancariaEntidad.getCantidadCredito());
     }
 
     public BigDecimal agregarFondos(BigDecimal cantidad){
