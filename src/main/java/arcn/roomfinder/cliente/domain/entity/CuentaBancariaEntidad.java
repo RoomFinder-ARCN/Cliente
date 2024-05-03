@@ -3,6 +3,8 @@ package arcn.roomfinder.cliente.domain.entity;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import arcn.roomfinder.cliente.domain.model.CuentaBancaria;
@@ -26,9 +28,14 @@ public class CuentaBancariaEntidad {
     @Column(name = "cantidad_credito")
     private double cantidadCredito;
 
+    @OneToOne
+    @JoinColumn(name = "cliente", referencedColumnName = "correo")
+    private ClienteEntidad clienteEntidad;
+
     public CuentaBancariaEntidad(CuentaBancaria cuentaBancaria) {
         this.numeroCuenta = cuentaBancaria.getNumeroCuenta();
         this.cantidadCredito = cuentaBancaria.getCantidadCredito().doubleValue();
+        
     }
 
 

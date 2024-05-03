@@ -15,12 +15,20 @@ import arcn.roomfinder.cliente.domain.model.TipoDocumento;
 import arcn.roomfinder.cliente.domain.repository.ClienteRepositorio;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,16 +55,20 @@ public class ClienteServicioTest {
 
     @Before
     public void setUp() {
-        cuentaBancariaCorrecta = new CuentaBancaria("123456789", 1000000);
+        try{
+            cuentaBancariaCorrecta = new CuentaBancaria("123456789", 1000000);
 
-        clienteCorrecto = new Cliente(
-            "JuanPuentes@gmail.com",
-            "Juan Puentes", 
-            TipoDocumento.valueOf("CC"), 
-            "123456789",             
-            cuentaBancariaCorrecta
-        );
-        
+            clienteCorrecto = new Cliente(
+                "JuanPuentes@gmail.com",
+                "Juan Puentes", 
+                TipoDocumento.valueOf("CC"), 
+                "123456789",             
+                cuentaBancariaCorrecta
+            );
+
+        }catch(RoomFinderException e){
+            e.printStackTrace();
+        }        
     }
 
     @Test
@@ -69,10 +81,126 @@ public class ClienteServicioTest {
     }
 
     @Test
-    public void deberiaLanzarExcepcionSiNoTieneInfoUsuario() throws RoomFinderException{
-        doThrow(RoomFinderException.class).when(clienteRepositorio).crearCliente(nullable(Cliente.class));
+    public void noDeberiaCrearClienteSiNoTieneInfoUsuario() throws RoomFinderException{
         assertThrows(RoomFinderException.class, () -> clienteServicio.crearCliente(null));
-        assertThrows(NullPointerException.class, () -> clienteServicio.crearCliente(new Cliente(null, null, null, null, null)));
+        assertThrows(NullPointerException.class, () -> new Cliente(null, null, null, null, null));
+    }
+
+    @Test
+    public void deberiaConsultarTodosLosCliente() throws RoomFinderException{
+        CuentaBancaria cuentaBancariaPrueba = new CuentaBancaria("123456", 1000000);
+
+        Cliente clientePrueba = new Cliente(
+            "estella.mur@gmail.com",
+            "Estella Mur", 
+            TipoDocumento.valueOf("CC"), 
+            "40037789",             
+            cuentaBancariaPrueba
+        );
+        
+        List<Cliente> listaClientes = new ArrayList<>();
+        listaClientes.add(clientePrueba);
+        listaClientes.add(clienteCorrecto);
+
+        doReturn(listaClientes).when(clienteRepositorio).obtenerTodosLosClientes();
+        assertEquals(listaClientes, clienteServicio.obtenerTodosLosClientes());
+        
+    }
+
+    @Test
+    public void deberiaConsultarClientePorCorreo() throws RoomFinderException{
+        doReturn(clienteCorrecto).when(clienteRepositorio).consultarClientePorCorreo(anyString());
+        var clienteRespuesta = clienteServicio.consultarClientePorCorreo("JuanPuentes@gmail.com");
+        assertEquals(clienteCorrecto, clienteRespuesta);
+    }
+
+    @Test
+    public void noDeberiaConsultarClientePorCorreoSiNoExiste() throws RoomFinderException{
+        doThrow(RoomFinderException.class).when(clienteRepositorio).consultarClientePorCorreo(anyString());
+        assertThrows(RoomFinderException.class, () -> clienteServicio.consultarClientePorCorreo("pollito@gmail.com"));
+    }
+
+    @Test
+    public void noDeberiaConsultarClientePorCorreoCuandoEsNulo() throws RoomFinderException{
+        assertThrows(RoomFinderException.class, () -> clienteServicio.consultarClientePorCorreo(null));
+    }
+
+    @Test
+    public void noDeberiaConsultarClientePorCorreoCuandoEsVacio() throws RoomFinderException{
+        assertThrows(RoomFinderException.class, () -> clienteServicio.consultarClientePorCorreo(""));
+    }
+
+    @Test
+    public void deberiaCrearCuentaBancaria() throws RoomFinderException{
+        CuentaBancaria cuentaBancariaPrueba = new CuentaBancaria("123456", 1000000);
+
+        Cliente clientePrueba = new Cliente(
+            "estella.mur@gmail.com",
+            "Estella Mur", 
+            TipoDocumento.valueOf("CC"), 
+            "40037789",             
+            null
+        );
+
+        doReturn(cuentaBancariaPrueba).when(clienteRepositorio).crearCuentaBancaria(any(CuentaBancaria.class),anyString());
+        CuentaBancaria cuentaBancariaRespuesta = clienteServicio.crearCuentaBancaria(cuentaBancariaPrueba, clientePrueba.getCorreo());
+        
+        assertNotNull(cuentaBancariaRespuesta);
+        assertEquals(cuentaBancariaPrueba, cuentaBancariaRespuesta);
+    }
+
+    @Test
+    public void noDeberiaCrearCuentaBancariaSiLaInfoEsNula() throws RoomFinderException{
+        assertThrows(RoomFinderException.class, () -> clienteServicio.crearCuentaBancaria(null, null));
+    }
+
+    @Test
+    public void noDeberiaCrearCuentaBancariaSinLosDatosDeLaCuenta() throws RoomFinderException{
+
+        Cliente clientePrueba = new Cliente(
+            "estella.mur@gmail.com",
+            "Estella Mur", 
+            TipoDocumento.valueOf("CC"), 
+            "40037789",             
+            null
+        );
+
+        assertThrows(RoomFinderException.class, () -> clienteServicio.crearCuentaBancaria(null, clientePrueba.getCorreo()));
+    }
+
+    @Test
+    public void noDeberiaCrearCuentaBancariaSiElCorreoEsNulo() throws RoomFinderException{
+        CuentaBancaria cuentaBancariaPrueba = new CuentaBancaria("123456", 1000000);
+
+        assertThrows(RoomFinderException.class, () -> clienteServicio.crearCuentaBancaria(cuentaBancariaPrueba, null));
+    }
+
+    @Test
+    public void noDeberiaCrearCuentaBancariaSiElCorreoEsVacio() throws RoomFinderException{
+        CuentaBancaria cuentaBancariaPrueba = new CuentaBancaria("123456", 1000000);
+
+        assertThrows(RoomFinderException.class, () -> clienteServicio.crearCuentaBancaria(cuentaBancariaPrueba, ""));
+    }
+
+    @Test
+    public void noDeberiaCrearCuentaBancariaSiElNumeroDeLaCuentaEsNulo() throws RoomFinderException{    
+        assertThrows(RoomFinderException.class, () -> new CuentaBancaria(null,0));
+    }
+
+    @Test
+    public void deberiaEliminarUnClientePorCorreo() throws RoomFinderException{
+        doThrow(RoomFinderException.class).when(clienteRepositorio).eliminarClientePorCorreo(anyString());
+        assertThrows(RoomFinderException.class, ()-> clienteServicio.eliminarClientePorCorreo("JuanPuentes@gmail.com"));      
+    }
+
+    @Test
+    public void noDeberiaEliminarUnClientePorCorreoCuandoEsNulo() throws RoomFinderException{        
+        assertThrows(RoomFinderException.class, ()-> clienteServicio.eliminarClientePorCorreo(null));      
+    }
+
+    @Test
+    public void noDeberiaEliminarUnClientePorCorreoCuandoEsVacio() throws RoomFinderException{        
+        assertThrows(RoomFinderException.class, ()-> clienteServicio.eliminarClientePorCorreo(""));      
     }
 
     

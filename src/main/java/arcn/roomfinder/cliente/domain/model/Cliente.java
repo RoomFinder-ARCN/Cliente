@@ -21,8 +21,7 @@ public class Cliente {
 
     @NonNull
     private String numeroDocumento;
-
-    @NonNull
+    
     private CuentaBancaria cuentaBancaria;
     
 }

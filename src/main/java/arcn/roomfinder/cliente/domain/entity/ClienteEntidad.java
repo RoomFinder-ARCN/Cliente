@@ -2,10 +2,12 @@ package arcn.roomfinder.cliente.domain.entity;
 
 import arcn.roomfinder.cliente.domain.model.CuentaBancaria;
 import arcn.roomfinder.cliente.domain.model.TipoDocumento;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -35,11 +37,8 @@ public class ClienteEntidad {
 
     @Column(name = "numero_documento")
     private String numeroDocumento;
-
     
-    @OneToOne
-    @JoinColumn(name = "cuenta_bancaria_id", referencedColumnName = "numero_cuenta")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "clienteEntidad", cascade = CascadeType.ALL)   
     private CuentaBancariaEntidad cuentaBancariaEntidad;
-    
     
 }

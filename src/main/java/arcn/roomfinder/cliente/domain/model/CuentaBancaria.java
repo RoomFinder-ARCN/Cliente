@@ -5,13 +5,12 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import arcn.roomfinder.cliente.domain.entity.CuentaBancariaEntidad;
-
+import arcn.roomfinder.cliente.domain.exception.RoomFinderException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @NoArgsConstructor
-
 public class CuentaBancaria {
     
     @NonNull
@@ -24,11 +23,13 @@ public class CuentaBancaria {
     @JsonProperty("cantidadCredito")
     private BigDecimal cantidadCredito;
 
-    public CuentaBancaria(String numeroCuenta) {
+    public CuentaBancaria(String numeroCuenta) throws RoomFinderException {
         this(numeroCuenta,0);
     }
 
-    public CuentaBancaria(String numeroCuenta, double cantidadCredito) {
+    public CuentaBancaria(String numeroCuenta, double cantidadCredito) throws RoomFinderException {
+        if (numeroCuenta == null || numeroCuenta.equals("")) throw new RoomFinderException("El número de cuenta no puede ser nulo o vacío");
+        
         this.numeroCuenta = numeroCuenta;
         this.cantidadCredito = BigDecimal.valueOf(cantidadCredito);
     }
