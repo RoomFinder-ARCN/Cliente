@@ -15,6 +15,8 @@ import arcn.roomfinder.cliente.domain.repository.ClienteRepositorio;
 public class ClienteServicioImpl implements ClienteServicio {
     
     private ClienteRepositorio clienteRepositorio;
+    private static final String MENSAJE_CORREO = "El correo no puede ser null o vacio";
+    private static final String MENSAJE_DATOS ="Los datos no pueden ser nulos o vacios";
 
     @Autowired
     public ClienteServicioImpl(ClienteRepositorio clienteRepositorio) {
@@ -34,19 +36,19 @@ public class ClienteServicioImpl implements ClienteServicio {
 
     @Override
     public Cliente consultarClientePorCorreo(String correo) throws RoomFinderException {
-        if (correo == null || correo.equals("")) throw new RoomFinderException("El correo no puede ser null o vacio");
+        if (correo == null || correo.equals("")) throw new RoomFinderException(MENSAJE_CORREO);
         return clienteRepositorio.consultarClientePorCorreo(correo);
     }
 
     @Override
     public CuentaBancaria crearCuentaBancaria(CuentaBancaria cuentaBancaria, String correo) throws RoomFinderException {
-        if (cuentaBancaria == null || correo == null || correo.equals("")) throw new RoomFinderException("Los datos no pueden ser nulos o vacios");
+        if (cuentaBancaria == null || correo == null || correo.equals("")) throw new RoomFinderException(MENSAJE_DATOS);
         return clienteRepositorio.crearCuentaBancaria(cuentaBancaria, correo);
     }
 
     @Override
     public void eliminarClientePorCorreo(String correo) throws RoomFinderException {
-        if (correo == null || correo.equals("")) throw new RoomFinderException("El correo no puede ser null o vacio");
+        if (correo == null || correo.equals("")) throw new RoomFinderException(MENSAJE_CORREO);
         clienteRepositorio.eliminarClientePorCorreo(correo);
     }
     
