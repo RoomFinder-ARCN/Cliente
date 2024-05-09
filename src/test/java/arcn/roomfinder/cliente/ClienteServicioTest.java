@@ -194,6 +194,12 @@ public class ClienteServicioTest {
     }
 
     @Test
+    public void noDeberiaEliminarClienteSiElCorreoNoExiste() throws RoomFinderException{
+        doThrow(RoomFinderException.class).when(clienteRepositorio).eliminarClientePorCorreo(anyString());
+        assertThrows(RoomFinderException.class, ()-> clienteServicio.eliminarClientePorCorreo("pollito@gmail.com"));
+    }
+
+    @Test
     public void noDeberiaEliminarUnClientePorCorreoCuandoEsNulo() throws RoomFinderException{        
         assertThrows(RoomFinderException.class, ()-> clienteServicio.eliminarClientePorCorreo(null));      
     }
