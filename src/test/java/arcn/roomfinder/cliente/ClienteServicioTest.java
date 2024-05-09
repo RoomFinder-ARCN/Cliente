@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -178,7 +179,6 @@ public class ClienteServicioTest {
     @Test
     public void noDeberiaCrearCuentaBancariaSiElCorreoEsVacio() throws RoomFinderException{
         CuentaBancaria cuentaBancariaPrueba = new CuentaBancaria("123456", 1000000);
-
         assertThrows(RoomFinderException.class, () -> clienteServicio.crearCuentaBancaria(cuentaBancariaPrueba, ""));
     }
 
@@ -189,8 +189,8 @@ public class ClienteServicioTest {
 
     @Test
     public void deberiaEliminarUnClientePorCorreo() throws RoomFinderException{
-        doThrow(RoomFinderException.class).when(clienteRepositorio).eliminarClientePorCorreo(anyString());
-        assertThrows(RoomFinderException.class, ()-> clienteServicio.eliminarClientePorCorreo("JuanPuentes@gmail.com"));      
+        clienteServicio.eliminarClientePorCorreo(clienteCorrecto.getCorreo());
+        assertNull(clienteServicio.consultarClientePorCorreo(clienteCorrecto.getCorreo())); 
     }
 
     @Test
