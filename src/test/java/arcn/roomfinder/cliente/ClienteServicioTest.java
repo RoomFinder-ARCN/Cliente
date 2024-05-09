@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.matchers.Null;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import arcn.roomfinder.cliente.application.ClienteServicio;
@@ -85,6 +86,21 @@ public class ClienteServicioTest {
     public void noDeberiaCrearClienteSiNoTieneInfoUsuario() throws RoomFinderException{
         assertThrows(RoomFinderException.class, () -> clienteServicio.crearCliente(null));
         assertThrows(NullPointerException.class, () -> new Cliente(null, null, null, null, null));
+    }
+
+    @Test
+    public void noDeberiaPermitirTipoDocumentoCuandoElValorNoEsValido() {
+        assertThrows( IllegalArgumentException.class, ()-> TipoDocumento.valueOf("LT"));
+    }
+
+    @Test
+    public void noDeberiaPermitirTipoDocumentoCuandoElValorEsVacio() {
+        assertThrows( IllegalArgumentException.class, ()-> TipoDocumento.valueOf(""));
+    }
+
+    @Test
+    public void oDeberiaPermitirTipoDocumentoCuandoElValorEsNulo() {
+        assertThrows( NullPointerException.class, ()-> TipoDocumento.valueOf(null));
     }
 
     @Test
