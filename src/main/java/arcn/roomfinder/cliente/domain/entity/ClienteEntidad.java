@@ -1,6 +1,5 @@
 package arcn.roomfinder.cliente.domain.entity;
 
-import arcn.roomfinder.cliente.domain.model.CuentaBancaria;
 import arcn.roomfinder.cliente.domain.model.TipoDocumento;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -9,7 +8,6 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 import jakarta.persistence.Table;
