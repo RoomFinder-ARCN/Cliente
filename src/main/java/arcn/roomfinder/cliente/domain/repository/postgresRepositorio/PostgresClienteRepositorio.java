@@ -10,7 +10,6 @@ import arcn.roomfinder.cliente.domain.entity.CuentaBancariaEntidad;
 import arcn.roomfinder.cliente.domain.exception.RoomFinderException;
 import arcn.roomfinder.cliente.domain.model.Cliente;
 import arcn.roomfinder.cliente.domain.model.CuentaBancaria;
-import arcn.roomfinder.cliente.domain.model.TipoDocumento;
 import arcn.roomfinder.cliente.domain.repository.ClienteRepositorio;
 import jakarta.transaction.Transactional;
 
@@ -18,6 +17,8 @@ import jakarta.transaction.Transactional;
 public class PostgresClienteRepositorio implements ClienteRepositorio {
     private PostgresClienteInterface clienteInterface;
     private PostgresCuentaInterface cuentaInterface;
+    private static final String MENSAJE_CORREO ="No existe el cliente con el correo: ";
+    private static final String MENSAJE_CUENTABANCARIA ="La cuenta bancaria o el correo no pueden ser null";
 
     @Autowired
     public PostgresClienteRepositorio(PostgresClienteInterface clienteInterface, PostgresCuentaInterface cuentaInterface) {
@@ -62,7 +63,7 @@ public class PostgresClienteRepositorio implements ClienteRepositorio {
     @Override
     public Cliente consultarClientePorCorreo(String correo) throws RoomFinderException {
         ClienteEntidad clienteEntidad = clienteInterface.findById(correo)
-                                        .orElseThrow(() -> new RoomFinderException("No existe el cliente con el correo: " + correo));
+                                        .orElseThrow(() -> new RoomFinderException(MENSAJE_CORREO + correo));
         
         return new Cliente(
             clienteEntidad.getCorreo(),
@@ -77,10 +78,10 @@ public class PostgresClienteRepositorio implements ClienteRepositorio {
     @Override
     @Transactional
     public void eliminarClientePorCorreo(String correo) throws RoomFinderException {
-        if (correo == null) throw new RoomFinderException("La cuenta bancaria o el correo no pueden ser null");
+        if (correo == null) throw new RoomFinderException(MENSAJE_CUENTABANCARIA);
 
         ClienteEntidad clienteEntidad = clienteInterface.findById(correo)
-                                        .orElseThrow(() -> new RoomFinderException("No existe el cliente con el correo: " + correo));
+                                        .orElseThrow(() -> new RoomFinderException(MENSAJE_CORREO + correo));
         
         clienteInterface.delete(clienteEntidad);
 
@@ -88,10 +89,10 @@ public class PostgresClienteRepositorio implements ClienteRepositorio {
 
     @Override
     public CuentaBancaria crearCuentaBancaria(CuentaBancaria cuentaBancaria, String correo) throws RoomFinderException {
-        if (cuentaBancaria== null || correo == null) throw new RoomFinderException("La cuenta bancaria o el correo no pueden ser null");            
+        if (cuentaBancaria== null || correo == null) throw new RoomFinderException(MENSAJE_CUENTABANCARIA);            
         
        ClienteEntidad clienteEntidad = clienteInterface.findById(correo)
-                                        .orElseThrow(() -> new RoomFinderException("No existe el cliente con el correo: " + correo));
+                                        .orElseThrow(() -> new RoomFinderException(MENSAJE_CORREO + correo));
 
         CuentaBancariaEntidad cuentaBancariaEntidad = new CuentaBancariaEntidad();
         cuentaBancariaEntidad.setNumeroCuenta(cuentaBancaria.getNumeroCuenta());
