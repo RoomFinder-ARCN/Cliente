@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import arcn.roomfinder.cliente.domain.model.Cliente;
 import arcn.roomfinder.cliente.domain.model.CuentaBancaria;
+import io.swagger.v3.oas.annotations.Operation;
 import arcn.roomfinder.cliente.application.ClienteServicio;
 
 @RestController
@@ -24,6 +25,7 @@ public class ClienteController {
         this.clienteServicio = clienteServicio;
     }
 
+    @Operation(summary = "Crear cliente")
     @PostMapping(value = "")
     public ResponseEntity<?> crearCliente(@RequestBody Cliente cliente){
         try{
@@ -37,6 +39,8 @@ public class ClienteController {
 
     }
 
+
+    @Operation(summary = "Obtener todos los clientes")
     @GetMapping(value = "")
     public ResponseEntity<?> obtenerTodosLosClientes(){
         try{
@@ -49,6 +53,8 @@ public class ClienteController {
 
     }
 
+
+    @Operation(summary = "Consultar cliente por correo")
     @GetMapping(value = "/{correo}")
     public ResponseEntity<?> consultarClientePorCorreo(@PathVariable("correo")  String correo){
         try{
@@ -59,6 +65,8 @@ public class ClienteController {
         }
     }
 
+
+    @Operation(summary = "Eliminar cliente por correo")
     @DeleteMapping(value = "/{correo}")
     public ResponseEntity<?> eliminarClientePorCorreo(@PathVariable("correo")  String correo){
         try{
@@ -69,6 +77,8 @@ public class ClienteController {
         }
     }
 
+
+    @Operation(summary = "Crear cuenta bancaria")
     @PostMapping(value ="/{correo}/cuenta")
     public ResponseEntity<?> crearCuentaBancaria(@RequestBody CuentaBancaria cuentaBancaria, @PathVariable("correo")  String correo){
         try{
@@ -81,7 +91,5 @@ public class ClienteController {
         }
 
     }
-
-
-    
+  
 }
