@@ -49,14 +49,15 @@ public class PostgresClienteRepositorio implements ClienteRepositorio {
 
     @Override
     public List<Cliente> obtenerTodosLosClientes() {
-        return clienteInterface.findAll().parallelStream().map(cliente ->
-            {
-                try{
-                    return this.consultarClientePorCorreo(cliente.getCorreo());
-                }catch(RoomFinderException e){
-                    return null;
-                }
-            }
+        return clienteInterface.findAll().parallelStream().map(clienteEntidad ->
+            new Cliente(
+                clienteEntidad.getCorreo(),
+                clienteEntidad.getNombre(),
+                clienteEntidad.getTipoDocumento(),
+                clienteEntidad.getNumeroDocumento(),
+                clienteEntidad.getCuentaBancariaEntidad()==null? null:new CuentaBancaria(clienteEntidad.getCuentaBancariaEntidad())
+            )
+
         ).toList();
     }
 

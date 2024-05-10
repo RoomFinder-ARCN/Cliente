@@ -1,5 +1,6 @@
 package arcn.roomfinder.cliente.infrastructure.inbound;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +28,7 @@ public class ClienteController {
 
     @Operation(summary = "Crear cliente")
     @PostMapping(value = "")
-    public ResponseEntity<?> crearCliente(@RequestBody Cliente cliente){
+    public ResponseEntity<String> crearCliente(@RequestBody Cliente cliente){
         try{
             var clienteCreado= clienteServicio.crearCliente(cliente);
             return ResponseEntity.status(201).body("Cliente :" + clienteCreado.getNombre() +" creado");
@@ -42,12 +43,12 @@ public class ClienteController {
 
     @Operation(summary = "Obtener todos los clientes")
     @GetMapping(value = "")
-    public ResponseEntity<?> obtenerTodosLosClientes(){
+    public ResponseEntity<List<Cliente>> obtenerTodosLosClientes(){
         try{
             var clientes= clienteServicio.obtenerTodosLosClientes();
             return ResponseEntity.status(200).body(clientes);
         }catch(Exception e){
-            return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.status(500).body(null);
 
         }
 
@@ -56,19 +57,19 @@ public class ClienteController {
 
     @Operation(summary = "Consultar cliente por correo")
     @GetMapping(value = "/{correo}")
-    public ResponseEntity<?> consultarClientePorCorreo(@PathVariable("correo")  String correo){
+    public ResponseEntity<Cliente> consultarClientePorCorreo(@PathVariable("correo")  String correo){
         try{
             var cliente= clienteServicio.consultarClientePorCorreo(correo);
             return ResponseEntity.status(200).body(cliente);
         }catch(Exception e){
-            return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.status(500).body(null);
         }
     }
 
 
     @Operation(summary = "Eliminar cliente por correo")
     @DeleteMapping(value = "/{correo}")
-    public ResponseEntity<?> eliminarClientePorCorreo(@PathVariable("correo")  String correo){
+    public ResponseEntity<String> eliminarClientePorCorreo(@PathVariable("correo")  String correo){
         try{
             clienteServicio.eliminarClientePorCorreo(correo);
             return ResponseEntity.status(200).body("Cliente " + correo + "fue eliminado");
@@ -80,7 +81,7 @@ public class ClienteController {
 
     @Operation(summary = "Crear cuenta bancaria")
     @PostMapping(value ="/{correo}/cuenta")
-    public ResponseEntity<?> crearCuentaBancaria(@RequestBody CuentaBancaria cuentaBancaria, @PathVariable("correo")  String correo){
+    public ResponseEntity<String> crearCuentaBancaria(@RequestBody CuentaBancaria cuentaBancaria, @PathVariable("correo")  String correo){
         try{
             clienteServicio.crearCuentaBancaria(cuentaBancaria, correo);
             return ResponseEntity.status(201).body("Cuenta bancaria No" + cuentaBancaria.getNumeroCuenta()  +" creada");
